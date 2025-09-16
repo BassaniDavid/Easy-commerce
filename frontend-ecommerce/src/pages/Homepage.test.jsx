@@ -74,7 +74,7 @@ describe("api", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText("Essence Mascara Lash Princess")
+        screen.getByRole("heading", { name: /essence mascara lash princess/i })
       ).toBeInTheDocument()
     );
 
