@@ -1,5 +1,7 @@
+import Api from "../services/api";
+
 const Homepage = () => {
-  return <></>;
+  return <main></main>;
 };
 
 export default Homepage;
