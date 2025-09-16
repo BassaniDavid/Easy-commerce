@@ -9,7 +9,6 @@ const Homepage = () => {
   useEffect(() => {
     fetchProducts().then(setProducts);
   }, []);
-  console.log(products);
   return (
     <main>
       {products.map((product) => (
