@@ -60,3 +60,21 @@ export async function fetchProductByName(name) {
   // ritorna il primo prodotto trovato
   return data.products[0] || null;
 }
+
+// Fetch prodotti per ricerca generica (titolo + descrizione)
+export const fetchProductsBySearch = async (query) => {
+  if (!query) return { products: [], total: 0, skip: 0, limit: 0 };
+
+  try {
+    const res = await fetch(
+      `https://dummyjson.com/products/search?q=${encodeURIComponent(query)}`
+    );
+    if (!res.ok)
+      throw new Error(`Errore nella ricerca prodotti per query "${query}"`);
+    const data = await res.json(); // { products: [...], total, skip, limit }
+    return data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { products: [], total: 0, skip: 0, limit: 0 };
+  }
+};

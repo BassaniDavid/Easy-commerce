@@ -4,10 +4,12 @@ import {
   fetchProducts,
   fetchProductsByCategory,
   fetchCategories,
+  fetchProductsBySearch,
 } from "../api/api";
 import ProductCard from "../components/ProductCard";
 import Pagination from "../components/Pagination";
 import CategoryFilter from "../components/CategoryFilter";
+import SearchBar from "../components/SearchBar";
 
 export default function Homepage() {
   const location = useLocation();
@@ -16,20 +18,39 @@ export default function Homepage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const productsPerPage = 20;
 
   const loadProducts = async (
     page = currentPage,
-    categoryFilter = category
+    categoryFilter = category,
+    search = searchTerm
   ) => {
-    const skip = (page - 1) * productsPerPage;
-    const data = categoryFilter
-      ? await fetchProductsByCategory(categoryFilter, productsPerPage, skip)
-      : await fetchProducts(productsPerPage, skip);
+    setLoading(true);
+    try {
+      const skip = (page - 1) * productsPerPage;
+      let data;
+      if (search) {
+        data = await fetchProductsBySearch(search);
+      } else if (categoryFilter) {
+        data = await fetchProductsByCategory(
+          categoryFilter,
+          productsPerPage,
+          skip
+        );
+      } else {
+        data = await fetchProducts(productsPerPage, skip);
+      }
 
-    setProducts(data.products);
-    setTotalProducts(data.total);
+      setProducts(data.products);
+      setTotalProducts(data.total);
+    } catch (err) {
+      console.error("Errore caricamento prodotti:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loadCategories = async () => {
@@ -43,10 +64,11 @@ export default function Homepage() {
     }
   }, [location.state]);
 
+  // Ricarica prodotti quando cambia pagina, categoria o ricerca
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     loadProducts();
-  }, [currentPage, category]);
+  }, [currentPage, category, searchTerm]);
 
   useEffect(() => {
     loadCategories();
@@ -55,15 +77,27 @@ export default function Homepage() {
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
     setCurrentPage(1);
+    setSearchTerm("");
+  };
+
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+    setCategory("");
   };
 
   return (
     <main className="min-h-screen p-5">
+      {/* Search Bar */}
+      <SearchBar onSearch={handleSearchChange} />
+
       <CategoryFilter
         categories={categories}
         selected={category}
         onChange={handleCategoryChange}
       />
+
+      {loading && <div className="text-gray-500 mb-2">Caricamento...</div>}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         {products.map((product) => (
