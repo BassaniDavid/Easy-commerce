@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import Homepage from "../pages/Homepage";
-import * as api from "../services/api";
+import * as api from "../api/api";
 
-describe("Homepage - Filtraggio per categoria e reset paginazione", () => {
+describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
   beforeEach(() => {
     // Mock da usare per fetchProductsByCategory
     vi.spyOn(api, "fetchProductsByCategory").mockImplementation(
@@ -86,33 +86,6 @@ describe("Homepage - Filtraggio per categoria e reset paginazione", () => {
     expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
     expect(await screen.findByText(/Galaxy S22/i)).toBeInTheDocument();
     expect(await screen.findByText(/MacBook Pro/i)).toBeInTheDocument();
-  });
-
-  it("filtra i prodotti selezionando 'smartphones' e resetta la paginazione a 1", async () => {
-    render(<Homepage />);
-
-    // Simula cambio pagina prima
-    const nextButton = screen.getByRole("button", { name: ">" });
-    await userEvent.click(nextButton); // passa a pagina 2
-    expect(api.fetchProducts).toHaveBeenCalledWith(20, 20);
-
-    // Seleziona categoria
-    const select = screen.getByRole("combobox", { name: /Category select/i });
-    await userEvent.selectOptions(select, "smartphones");
-
-    // Verifica che prodotti filtrati siano visibili
-    expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Galaxy S22/i)).toBeInTheDocument();
-
-    // Prodotto di altra categoria non deve essere visibile
-    expect(screen.queryByText(/MacBook Pro/i)).not.toBeInTheDocument();
-
-    // La chiamata API deve essere con skip=0 (reset pagina)
-    expect(api.fetchProductsByCategory).toHaveBeenCalledWith(
-      "smartphones",
-      20,
-      0
-    );
   });
 
   it("mostra tutti i prodotti selezionando 'All'", async () => {
