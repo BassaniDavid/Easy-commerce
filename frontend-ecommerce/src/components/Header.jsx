@@ -16,7 +16,7 @@ const Header = () => {
         }
       >
         <div className="flex items-center gap-2">
-          <h2 className="hidden lg:block">Carrello</h2>
+          <h2 className="hidden lg:block">Cart</h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
