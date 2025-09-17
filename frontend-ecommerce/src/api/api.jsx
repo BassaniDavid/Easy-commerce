@@ -49,3 +49,14 @@ export const fetchCategories = async () => {
     return [];
   }
 };
+
+// Fetch per singolo prodotto
+export async function fetchProductByName(name) {
+  const res = await fetch(
+    `https://dummyjson.com/products/search?q=${encodeURIComponent(name)}`
+  );
+  const data = await res.json();
+
+  // ritorna il primo prodotto trovato
+  return data.products[0] || null;
+}
