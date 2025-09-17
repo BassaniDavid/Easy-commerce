@@ -1,6 +1,7 @@
 import { it, expect, describe, afterEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
+import { MemoryRouter } from "react-router-dom";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
@@ -19,7 +20,11 @@ describe("Homepage", () => {
       total: 1,
     });
 
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     expect(
       await screen.findByRole("heading", {

@@ -1,12 +1,17 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/", { state: { resetCategory: true } });
+  };
   return (
     <header className="text-2xl lg:text-4xl shadow-lg p-3 lg:p-6 flex justify-around items-center sticky top-0 bg-white">
-      <NavLink to="/">
-        <img src={logo} alt="" className="w-35 lg:w-45" />
-      </NavLink>
+      <button onClick={handleLogoClick}>
+        <img src={logo} alt="Logo" className="w-35 lg:w-45" />
+      </button>
       <NavLink
         to="/cart"
         className={({ isActive }) =>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   fetchProducts,
   fetchProductsByCategory,
@@ -9,6 +10,7 @@ import Pagination from "../components/Pagination";
 import CategoryFilter from "../components/CategoryFilter";
 
 export default function Homepage() {
+  const location = useLocation();
   const [products, setProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +36,12 @@ export default function Homepage() {
     const data = await fetchCategories();
     setCategories(data);
   };
+
+  useEffect(() => {
+    if (location.state?.resetCategory) {
+      setCategory(""); // reset filtro
+    }
+  }, [location.state]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

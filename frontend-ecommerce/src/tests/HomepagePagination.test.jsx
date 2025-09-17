@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/vitest";
 import { vi } from "vitest";
 
+import { MemoryRouter } from "react-router-dom";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
@@ -35,7 +36,11 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
   });
 
   it("mostra massimo 20 prodotti per pagina e chiama fetchProducts con limit e skip corretti", async () => {
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     // Controlla che siano presenti i primi 20 prodotti
     const prodotti = await screen.findAllByRole("heading", { level: 2 });
@@ -46,7 +51,11 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
   });
 
   it("cambia pagina cliccando sul numero della pagina e chiama fetchProducts correttamente", async () => {
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     // Clic su pagina 2
     await userEvent.click(await screen.findByRole("button", { name: "2" }));
@@ -59,7 +68,11 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
   });
 
   it("torna alla pagina precedente e chiama fetchProducts con skip corretto", async () => {
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     // Vai alla pagina 2
     await userEvent.click(await screen.findByRole("button", { name: "2" }));

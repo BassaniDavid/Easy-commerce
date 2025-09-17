@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
+import { MemoryRouter } from "react-router-dom";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
@@ -81,7 +82,11 @@ describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
   });
 
   it("mostra tutti i prodotti di default", async () => {
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
     expect(await screen.findByText(/Galaxy S22/i)).toBeInTheDocument();
@@ -89,7 +94,11 @@ describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
   });
 
   it("mostra tutti i prodotti selezionando 'All'", async () => {
-    render(<Homepage />);
+    render(
+      <MemoryRouter>
+        <Homepage />
+      </MemoryRouter>
+    );
 
     const select = screen.getByRole("combobox", { name: /Category select/i });
     await userEvent.selectOptions(select, "");
