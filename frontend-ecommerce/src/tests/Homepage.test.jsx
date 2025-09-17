@@ -1,20 +1,23 @@
 import { it, expect, describe, afterEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
 describe("Homepage", () => {
   it("mostra i prodotti dall'API", async () => {
-    vi.spyOn(api, "fetchProducts").mockResolvedValueOnce([
-      {
-        id: 1,
-        title: "Essence Mascara Lash Princess",
-        description: "Mascara test",
-        price: 9.99,
-        thumbnail: "test.jpg",
-      },
-    ]);
+    vi.spyOn(api, "fetchProducts").mockResolvedValueOnce({
+      products: [
+        {
+          id: 1,
+          title: "Essence Mascara Lash Princess",
+          description: "Mascara test",
+          price: 9.99,
+          thumbnail: "test.jpg",
+        },
+      ],
+      total: 1,
+    });
 
     render(<Homepage />);
 
