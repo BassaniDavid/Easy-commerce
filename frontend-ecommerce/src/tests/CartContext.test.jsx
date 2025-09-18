@@ -1,16 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { CartProvider, useCart } from "../contexts/CartContext";
-
-// Mock globale di fetch
-global.fetch = vi.fn();
+import * as api from "../api/api";
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
 
-describe("CartContext", () => {
-  it("aggiunge un prodotto e simula chiamata a DummyJSON con output corretto", async () => {
+describe("CartContext - addToCart", () => {
+  it("aggiunge un prodotto e aggiorna lo stato cart", async () => {
     const mockCartResponse = {
       id: 51,
       products: [
@@ -33,34 +31,23 @@ describe("CartContext", () => {
       totalQuantity: 1,
     };
 
-    // Mock fetch per restituire solo Cricket Helmet
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockCartResponse,
-    });
+    // Mock di addCart per restituire la risposta simulata
+    vi.spyOn(api, "addCart").mockResolvedValue(mockCartResponse);
 
     const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
     const { result } = renderHook(() => useCart(), { wrapper });
 
-    const newProduct = { id: 144, title: "Cricket Helmet", quantity: 1 };
+    const newProduct = { id: 144, quantity: 1, title: "Cricket Helmet" };
+
+    // Aggiungi il prodotto
     await act(async () => {
       await result.current.addToCart(newProduct);
     });
 
-    // Controllo stato cart
+    // Controlla che lo stato del carrello sia aggiornato correttamente
     expect(result.current.cart).toEqual(mockCartResponse.products);
 
-    // Controllo chiamata fetch
-    expect(fetch).toHaveBeenCalledWith(
-      "https://dummyjson.com/carts/add",
-      expect.objectContaining({
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: 1,
-          products: [{ id: 144, quantity: 1 }],
-        }),
-      })
-    );
+    // Controlla che addCart sia stata chiamata correttamente
+    expect(api.addCart).toHaveBeenCalledWith(1, [{ id: 144, quantity: 1 }]);
   });
 });

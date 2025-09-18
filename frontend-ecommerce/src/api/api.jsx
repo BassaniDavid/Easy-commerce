@@ -78,3 +78,22 @@ export const fetchProductsBySearch = async (query) => {
     return { products: [], total: 0, skip: 0, limit: 0 };
   }
 };
+
+// Fetch per il carrello
+export const addCart = async (userId, products) => {
+  try {
+    const res = await fetch("https://dummyjson.com/carts/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, products }),
+    });
+
+    if (!res.ok) throw new Error("Errore nella creazione del carrello");
+
+    const data = await res.json();
+    return data; // restituisce l'intero carrello creato
+  } catch (err) {
+    console.error("API error:", err);
+    return null;
+  }
+};
