@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeAll } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
+import { CartProvider } from "../contexts/CartContext";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
@@ -18,11 +19,11 @@ vi.mock("../api/api", async () => {
 });
 
 beforeAll(() => {
-  window.scrollTo = vi.fn();
+  window.scrollTo = vi.fn(); // Evita errori legati allo scroll nella HomePage
 });
 
-describe("Homepage ricerca", () => {
-  it("filtro risultati in base alla ricerca (title o description)", async () => {
+describe("Homepage - Ricerca prodotti", () => {
+  it("filtra i risultati in base al titolo o alla descrizione", async () => {
     // Mock dinamico della ricerca
     api.fetchProductsBySearch.mockImplementation((query) => {
       const allProducts = [
@@ -61,7 +62,9 @@ describe("Homepage ricerca", () => {
 
     render(
       <MemoryRouter>
-        <Homepage />
+        <CartProvider>
+          <Homepage />
+        </CartProvider>
       </MemoryRouter>
     );
 
@@ -70,17 +73,20 @@ describe("Homepage ricerca", () => {
       name: /search products/i,
     });
 
-    // Ricerca tramite titolo
+    // --- Ricerca tramite titolo ---
     await userEvent.type(searchInput, "AirPods");
     await userEvent.click(searchButton);
+
     const productByTitle = await screen.findByText("Apple AirPods Max Silver");
     expect(productByTitle).toBeInTheDocument();
+    // Assicurati che il prodotto non pertinente non compaia
     expect(screen.queryByText("Laptop Pro")).not.toBeInTheDocument();
 
-    // Resetta input e ricerca tramite descrizione
+    // --- Ricerca tramite descrizione ---
     await userEvent.clear(searchInput);
     await userEvent.type(searchInput, "laptop");
     await userEvent.click(searchButton);
+
     const productByDesc = await screen.findByText("Laptop Pro");
     expect(productByDesc).toBeInTheDocument();
     expect(

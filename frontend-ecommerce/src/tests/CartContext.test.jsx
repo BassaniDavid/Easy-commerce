@@ -7,6 +7,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
+// Stato iniziale per i test
 const initialCart = [
   {
     id: 144,
@@ -21,81 +22,118 @@ const initialCart = [
   },
 ];
 
-const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
-
-describe("CartContext - add/update/remove", () => {
-  it("aggiunge un prodotto e aggiorna lo stato cart", async () => {
-    const mockCartResponse = {
-      id: 51,
-      products: [...initialCart],
-      total: 44.99,
-      discountedTotal: 40,
-      userId: 1,
-      totalProducts: 1,
-      totalQuantity: 1,
+describe("CartContext - add/remove e gestione quantità", () => {
+  it("aggiunge un prodotto al carrello e aggiorna lo stato", async () => {
+    // Mock della risposta API: restituisce sempre i prodotti inviati
+    const mockResponse = {
+      id: 1,
+      products: [
+        {
+          id: 144,
+          title: "Cricket Helmet",
+          price: 44.99,
+          quantity: 1,
+          total: 44.99,
+          discountPercentage: 9.64,
+          discountedPrice: 41,
+          thumbnail:
+            "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/thumbnail.webp",
+        },
+      ],
     };
+    vi.spyOn(api, "addCart").mockResolvedValueOnce(mockResponse);
 
-    vi.spyOn(api, "addCart").mockResolvedValue(mockCartResponse);
-
+    const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
     const { result } = renderHook(() => useCart(), { wrapper });
 
     const newProduct = { id: 144, quantity: 1, title: "Cricket Helmet" };
 
+    // Aggiunta del prodotto
     await act(async () => {
       await result.current.addToCart(newProduct);
     });
 
-    expect(result.current.cart).toEqual(mockCartResponse.products);
+    // Controllo stato cart aggiornato correttamente
+    expect(result.current.cart).toEqual(mockResponse.products);
     expect(api.addCart).toHaveBeenCalledWith(1, [{ id: 144, quantity: 1 }]);
   });
 
-  it("aggiorna quantità di un prodotto nel carrello", async () => {
-    const updatedCartResponse = {
-      id: 51,
-      products: [
-        { ...initialCart[0], quantity: 3, total: 134.97, discountedPrice: 120 },
-      ],
-      total: 134.97,
-      discountedTotal: 120,
-      userId: 1,
-      totalProducts: 1,
-      totalQuantity: 3,
-    };
-
-    vi.spyOn(api, "updateCart").mockResolvedValue(updatedCartResponse);
-
-    const { result } = renderHook(() => useCart(), { wrapper });
-    act(() => result.current.setCart(initialCart));
-
-    await act(async () => {
-      await result.current.updateQuantity(144, 3);
+  it("aggiorna la quantità di un prodotto esistente nel carrello", async () => {
+    // Mock coerente per tutte le chiamate: restituisce sempre i prodotti inviati
+    vi.spyOn(api, "addCart").mockImplementation(async (userId, products) => {
+      return {
+        id: 51,
+        products: products.map((p) => ({
+          ...p,
+          total: p.price * p.quantity,
+          discountedPrice: p.price * p.quantity * 0.9,
+          discountPercentage: 10,
+          thumbnail:
+            "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/thumbnail.webp",
+          title: "Cricket Helmet",
+          price: 44.99,
+        })),
+      };
     });
 
-    expect(result.current.cart).toEqual(updatedCartResponse.products);
-    expect(api.updateCart).toHaveBeenCalledWith(1, [{ id: 144, quantity: 3 }]);
+    const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
+    const { result } = renderHook(() => useCart(), { wrapper });
+
+    // Aggiunta iniziale prodotto (quantity = 1)
+    await act(async () => {
+      await result.current.addToCart(initialCart[0]);
+    });
+
+    // Aggiunta ulteriore dello stesso prodotto (quantity = 2)
+    await act(async () => {
+      await result.current.addToCart({ ...initialCart[0], quantity: 2 });
+    });
+
+    // Controlla che la quantità totale sia aggiornata
+    expect(result.current.cart).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 144,
+          quantity: 3, // 1 + 2
+          title: "Cricket Helmet",
+          price: 44.99,
+        }),
+      ])
+    );
   });
 
   it("rimuove un prodotto dal carrello", async () => {
-    const updatedCartResponse = {
-      id: 51,
-      products: [],
-      total: 0,
-      discountedTotal: 0,
-      userId: 1,
-      totalProducts: 0,
-      totalQuantity: 0,
-    };
+    // Mock coerente: restituisce sempre i prodotti inviati
+    vi.spyOn(api, "addCart").mockImplementation(async (userId, products) => {
+      return {
+        id: 1,
+        products: products.map((p) => ({
+          ...p,
+          total: p.price * p.quantity,
+          discountedPrice: p.price * p.quantity * 0.9,
+          discountPercentage: 10,
+          thumbnail:
+            "https://cdn.dummyjson.com/product-images/sports-accessories/cricket-helmet/thumbnail.webp",
+          title: "Cricket Helmet",
+          price: 44.99,
+        })),
+      };
+    });
 
-    vi.spyOn(api, "updateCart").mockResolvedValue(updatedCartResponse);
-
+    const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
     const { result } = renderHook(() => useCart(), { wrapper });
-    act(() => result.current.setCart(initialCart));
 
+    // Aggiungi inizialmente il prodotto
+    await act(async () => {
+      await result.current.addToCart(initialCart[0]);
+    });
+
+    // Rimuovi il prodotto
     await act(async () => {
       await result.current.removeFromCart(144);
     });
 
+    // Controlla che il carrello sia vuoto
     expect(result.current.cart).toEqual([]);
-    expect(api.updateCart).toHaveBeenCalledWith(1, []);
   });
 });

@@ -30,7 +30,7 @@ export const fetchProductsByCategory = async (
         `Errore nel fetch dei prodotti per categoria ${category}`
       );
     const data = await res.json();
-    return data; // { products: [...], total: n }
+    return data;
   } catch (error) {
     console.error("Fetch error:", error);
     return { products: [], total: 0 };
@@ -56,22 +56,19 @@ export async function fetchProductByName(name) {
     `https://dummyjson.com/products/search?q=${encodeURIComponent(name)}`
   );
   const data = await res.json();
-
-  // ritorna il primo prodotto trovato
   return data.products[0] || null;
 }
 
-// Fetch prodotti per ricerca generica (titolo + descrizione)
+// Fetch prodotti per ricerca generica
 export const fetchProductsBySearch = async (query) => {
   if (!query) return { products: [], total: 0, skip: 0, limit: 0 };
-
   try {
     const res = await fetch(
       `https://dummyjson.com/products/search?q=${encodeURIComponent(query)}`
     );
     if (!res.ok)
       throw new Error(`Errore nella ricerca prodotti per query "${query}"`);
-    const data = await res.json(); // { products: [...], total, skip, limit }
+    const data = await res.json();
     return data;
   } catch (error) {
     console.error("Fetch error:", error);
@@ -79,7 +76,7 @@ export const fetchProductsBySearch = async (query) => {
   }
 };
 
-// Fetch per il carrello
+// Crea o aggiorna il carrello (in DummyJSON addCart simula anche update)
 export const addCart = async (userId, products) => {
   try {
     const res = await fetch("https://dummyjson.com/carts/add", {
@@ -87,11 +84,10 @@ export const addCart = async (userId, products) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, products }),
     });
-
-    if (!res.ok) throw new Error("Errore nella creazione del carrello");
-
+    if (!res.ok)
+      throw new Error("Errore nella creazione/aggiornamento del carrello");
     const data = await res.json();
-    return data; // restituisce l'intero carrello creato
+    return data; // restituisce l'intero carrello simulato
   } catch (err) {
     console.error("API error:", err);
     return null;

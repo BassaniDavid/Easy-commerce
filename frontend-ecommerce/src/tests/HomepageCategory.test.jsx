@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-
+import { CartProvider } from "../contexts/CartContext";
 import { MemoryRouter } from "react-router-dom";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
-describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
+describe("Homepage - Filtraggio per categoria e reset selezionando 'All'", () => {
   beforeEach(() => {
-    // Mock da usare per fetchProductsByCategory
+    // Mock per fetchProductsByCategory: filtra prodotti per categoria
     vi.spyOn(api, "fetchProductsByCategory").mockImplementation(
       async (category, limit = 20, skip = 0) => {
         const allProducts = [
@@ -41,6 +41,7 @@ describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
         const filtered = allProducts.filter(
           (p) => !category || p.category === category
         );
+
         return {
           products: filtered.slice(skip, skip + limit),
           total: filtered.length,
@@ -48,7 +49,7 @@ describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
       }
     );
 
-    // Mock fetchProducts normale (categoria "All")
+    // Mock fetchProducts normale: ritorna tutti i prodotti di default
     vi.spyOn(api, "fetchProducts").mockResolvedValue({
       products: [
         {
@@ -81,32 +82,42 @@ describe("Homepage - Filtraggio per categoria e reset selezionando all", () => {
     vi.restoreAllMocks();
   });
 
-  it("mostra tutti i prodotti di default", async () => {
+  it("mostra tutti i prodotti di default all'apertura della pagina", async () => {
     render(
       <MemoryRouter>
-        <Homepage />
+        <CartProvider>
+          <Homepage />
+        </CartProvider>
       </MemoryRouter>
     );
 
+    // Controlla che tutti i prodotti mockati siano presenti
     expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
     expect(await screen.findByText(/Galaxy S22/i)).toBeInTheDocument();
     expect(await screen.findByText(/MacBook Pro/i)).toBeInTheDocument();
   });
 
-  it("mostra tutti i prodotti selezionando 'All'", async () => {
+  it("mostra tutti i prodotti selezionando 'All' dal filtro categorie", async () => {
     render(
       <MemoryRouter>
-        <Homepage />
+        <CartProvider>
+          <Homepage />
+        </CartProvider>
       </MemoryRouter>
     );
 
+    // Trova il select della categoria
     const select = screen.getByRole("combobox", { name: /Category select/i });
+
+    // Seleziona 'All' (valore vuoto)
     await userEvent.selectOptions(select, "");
 
+    // Verifica che tutti i prodotti siano nuovamente visibili
     expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
     expect(await screen.findByText(/Galaxy S22/i)).toBeInTheDocument();
     expect(await screen.findByText(/MacBook Pro/i)).toBeInTheDocument();
 
-    expect(api.fetchProducts).toHaveBeenCalledWith(20, 0); // reset paginazione
+    // Controlla che l'API fetchProducts sia stata chiamata per il reset
+    expect(api.fetchProducts).toHaveBeenCalledWith(20, 0);
   });
 });
