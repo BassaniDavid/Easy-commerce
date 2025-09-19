@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   fetchProducts,
   fetchProductsByCategory,
@@ -13,66 +14,38 @@ import SearchBar from "../components/SearchBar";
 
 export default function Homepage() {
   const location = useLocation();
-  const [products, setProducts] = useState([]);
-  const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const productsPerPage = 20;
 
-  const loadProducts = async (
-    page = currentPage,
-    categoryFilter = category,
-    search = searchTerm
-  ) => {
-    setLoading(true);
-    try {
-      const skip = (page - 1) * productsPerPage;
-      let data;
-      if (search) {
-        data = await fetchProductsBySearch(search);
-      } else if (categoryFilter) {
-        data = await fetchProductsByCategory(
-          categoryFilter,
-          productsPerPage,
-          skip
-        );
-      } else {
-        data = await fetchProducts(productsPerPage, skip);
-      }
-
-      setProducts(data.products);
-      setTotalProducts(data.total);
-    } catch (err) {
-      console.error("Errore caricamento prodotti:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadCategories = async () => {
-    const data = await fetchCategories();
-    setCategories(data);
-  };
-
+  // Reset del filtro se navigo dal logo o altra pagina
   useEffect(() => {
     if (location.state?.resetCategory) {
-      setCategory(""); // reset filtro
+      setCategory("");
     }
   }, [location.state]);
 
-  // Ricarica prodotti quando cambia pagina, categoria o ricerca
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    loadProducts();
-  }, [currentPage, category, searchTerm]);
+  // Query per prodotti
+  const { data: productData, isLoading } = useQuery({
+    queryKey: ["products", currentPage, category, searchTerm],
+    queryFn: async () => {
+      const skip = (currentPage - 1) * productsPerPage;
+      if (searchTerm) return fetchProductsBySearch(searchTerm);
+      if (category)
+        return fetchProductsByCategory(category, productsPerPage, skip);
+      return fetchProducts(productsPerPage, skip);
+    },
+    keepPreviousData: true, // mantiene i dati della pagina precedente durante il caricamento
+    staleTime: 5 * 60 * 1000, // 5 minuti
+  });
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  // Query per categorie
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    staleTime: Infinity,
+  });
 
   const handleCategoryChange = (newCategory) => {
     setCategory(newCategory);
@@ -88,19 +61,17 @@ export default function Homepage() {
 
   return (
     <main className="min-h-screen p-5">
-      {/* Search Bar */}
       <SearchBar onSearch={handleSearchChange} />
-
       <CategoryFilter
         categories={categories}
         selected={category}
         onChange={handleCategoryChange}
       />
 
-      {loading && <div className="text-gray-500 mb-2">Caricamento...</div>}
+      {isLoading && <div className="text-gray-500 mb-2">Caricamento...</div>}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-        {products.map((product) => (
+        {productData?.products?.map((product) => (
           <ProductCard
             key={`${product.id}-${product.title}`}
             product={product}
@@ -108,13 +79,15 @@ export default function Homepage() {
         ))}
       </div>
 
-      <Pagination
-        totalProducts={totalProducts}
-        productsPerPage={productsPerPage}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        maxButtons={5}
-      />
+      {productData && (
+        <Pagination
+          totalProducts={productData.total}
+          productsPerPage={productsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          maxButtons={5}
+        />
+      )}
     </main>
   );
 }

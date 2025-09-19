@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 import { CartProvider } from "../contexts/CartContext";
@@ -21,13 +22,19 @@ describe("Homepage", () => {
       total: 1,
     });
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     // Rendering della homepage all'interno di MemoryRouter e CartProvider
     render(
-      <MemoryRouter>
-        <CartProvider>
-          <Homepage />
-        </CartProvider>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CartProvider>
+            <Homepage />
+          </CartProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     // Attende che il componente finisca il rendering dei prodotti (useEffect)

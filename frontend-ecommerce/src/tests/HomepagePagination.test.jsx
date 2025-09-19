@@ -1,14 +1,31 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom/vitest";
-import { vi } from "vitest";
 import { CartProvider } from "../contexts/CartContext";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
-describe("Homepage - Paginazione numerica con chiamata API", () => {
+// Helper per render con React Query + Router + CartProvider
+function renderWithClient(ui) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <CartProvider>{ui}</CartProvider>
+      </MemoryRouter>
+    </QueryClientProvider>
+  );
+}
+
+describe("Homepage - Paginazione numerica con React Query", () => {
   beforeEach(() => {
+    vi.restoreAllMocks();
+
     // Mock di fetchProducts: crea 40 prodotti fittizi
     vi.spyOn(api, "fetchProducts").mockImplementation(
       async (limit = 20, skip = 0) => {
@@ -31,18 +48,8 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
     );
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it("mostra massimo 20 prodotti per pagina all'apertura e chiama fetchProducts correttamente", async () => {
-    render(
-      <MemoryRouter>
-        <CartProvider>
-          <Homepage />
-        </CartProvider>
-      </MemoryRouter>
-    );
+    renderWithClient(<Homepage />);
 
     // Controlla che siano presenti massimo 20 headings per i prodotti
     const prodotti = await screen.findAllByRole("heading", { level: 2 });
@@ -53,13 +60,7 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
   });
 
   it("mostra i prodotti della pagina 2 cliccando sul numero e chiama fetchProducts con skip corretto", async () => {
-    render(
-      <MemoryRouter>
-        <CartProvider>
-          <Homepage />
-        </CartProvider>
-      </MemoryRouter>
-    );
+    renderWithClient(<Homepage />);
 
     // Clic su pagina 2
     await userEvent.click(await screen.findByRole("button", { name: "2" }));
@@ -72,13 +73,7 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
   });
 
   it("torna alla pagina precedente e chiama fetchProducts con skip=0", async () => {
-    render(
-      <MemoryRouter>
-        <CartProvider>
-          <Homepage />
-        </CartProvider>
-      </MemoryRouter>
-    );
+    renderWithClient(<Homepage />);
 
     // Vai prima alla pagina 2
     await userEvent.click(await screen.findByRole("button", { name: "2" }));
@@ -92,5 +87,9 @@ describe("Homepage - Paginazione numerica con chiamata API", () => {
     // Controlla che il prodotto 1 e 20 siano visibili nella pagina 1
     expect(await screen.findByText(/^Prodotto 1$/i)).toBeInTheDocument();
     expect(await screen.findByText(/^Prodotto 20$/i)).toBeInTheDocument();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 });

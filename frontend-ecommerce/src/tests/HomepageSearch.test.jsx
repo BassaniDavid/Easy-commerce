@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeAll } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CartProvider } from "../contexts/CartContext";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
@@ -57,15 +58,21 @@ describe("Homepage - Ricerca prodotti", () => {
       });
     });
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     // Mock categorie per evitare errori in Homepage
     api.fetchCategories.mockResolvedValue(["mobile-accessories", "laptops"]);
 
     render(
-      <MemoryRouter>
-        <CartProvider>
-          <Homepage />
-        </CartProvider>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <CartProvider>
+            <Homepage />
+          </CartProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     const searchInput = screen.getByRole("searchbox");
