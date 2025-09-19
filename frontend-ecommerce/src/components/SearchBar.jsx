@@ -21,7 +21,7 @@ export default function SearchBar({
   };
 
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex mb-4 border rounded border-lime-400 dark:border-lime-600 dark:bg-neutral-900 dark:text-white grow">
       <input
         type="text"
         role="searchbox"
@@ -30,12 +30,12 @@ export default function SearchBar({
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="border p-2 rounded flex-1"
+        className=" p-2 rounded flex-1"
       />
       <button
         onClick={handleSearch}
         aria-label="search products"
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className=" px-4 py-2 rounded bg-lime-400 text-black hover:bg-lime-500 dark:bg-lime-600 dark:text-white dark:hover:bg-lime-400"
       >
         Search
       </button>

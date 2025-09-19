@@ -4,11 +4,15 @@ const CartPage = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
 
   return (
-    <main className="min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Il tuo carrello</h1>
+    <main className="min-h-screen dark:bg-neutral-950 dark:text-white">
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        Your shopping cart
+      </h1>
 
       {cart.length === 0 ? (
-        <p>Il carrello è vuoto</p>
+        <p className="text-xl font-bold mb-4 text-center text-red-500/50">
+          The cart is currently empty
+        </p>
       ) : (
         <div className="grid gap-4">
           {cart.map((product) => (

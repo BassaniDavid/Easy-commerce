@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
   const decrease = () => setQuantity((q) => Math.max(1, q - 1));
 
   return (
-    <div className="flex flex-col rounded-lg p-4 border border-neutral-300 md:shadow-sm shadow-neutral-200 h-full hover:shadow-lg transition">
+    <div className="flex flex-col rounded-lg p-4 border h-full hover:shadow-lg hover:scale-101 transition bg-sky-100/50 border-neutral-300 md:shadow-md shadow-sky-600/20 dark:bg-sky-950/10 dark:border-neutral-800 dark:shadow-sky-950/20">
       {/* Link all’interno della card */}
       <Link
         to={`/products/${slugify(product.title)}`}
@@ -31,7 +31,7 @@ export default function ProductCard({ product }) {
 
         <div className="flex-1 flex flex-col">
           <h2 className="text-lg font-semibold">{product.title}</h2>
-          <p className="text-gray-600 line-clamp-3 mt-1">
+          <p className=" line-clamp-3 mt-1 text-gray-600 dark:text-gray-400">
             {product.description}
           </p>
           <p className="font-bold mt-2">${product.price}</p>
@@ -42,7 +42,7 @@ export default function ProductCard({ product }) {
       <div className="mt-3 flex items-center justify-between">
         <button
           onClick={handleAddToCart}
-          className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
+          className="px-3 py-1 rounded transition bg-lime-500 text-white hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500"
         >
           Add to Cart
         </button>
@@ -50,14 +50,14 @@ export default function ProductCard({ product }) {
         <div className="flex items-center border border-neutral-300 rounded">
           <button
             onClick={decrease}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition rounded-l"
+            className="px-3 py-1 transition rounded bg-gray-200 hover:bg-gray-400 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-500"
           >
             -
           </button>
           <span className="px-4">{quantity}</span>
           <button
             onClick={increase}
-            className="px-3 py-1 bg-gray-200 hover:bg-gray-300 transition rounded-r"
+            className="px-3 py-1 transition rounded bg-gray-200 hover:bg-gray-400 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-500"
           >
             +
           </button>

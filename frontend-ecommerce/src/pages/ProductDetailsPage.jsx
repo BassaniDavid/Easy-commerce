@@ -43,9 +43,9 @@ function ProductDetailsPage() {
     );
 
   return (
-    <main className=" flex flex-col gap-6 min-h-[80vh] p-5 md:flex-row md:px-[10vw]">
+    <main className=" flex flex-col gap-6 min-h-[80vh] p-5 md:flex-row md:px-[10vw] dark:bg-neutral-950 dark:text-white">
       {/* Immagine prodotto */}
-      <div className="flex-shrink-0 md:w-1/3">
+      <div className="flex-shrink-0 md:w-1/4">
         <img
           src={productData.images}
           alt={productData.title}
@@ -56,14 +56,16 @@ function ProductDetailsPage() {
       {/* Dettagli prodotto */}
       <div className="flex-1 flex flex-col gap-4">
         <h1 className="text-3xl font-bold">{productData.title}</h1>
-        <p className="text-gray-700">{productData.description}</p>
+        <p className="text-gray-700 dark:text-gray-400">
+          {productData.description}
+        </p>
         <p className="text-xl font-semibold">Prezzo: ${productData.price}</p>
         <p className="text-yellow-500">Rating: {productData.rating}</p>
         <button
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          onClick={() => console.log("Aggiungi al carrello:", productData)}
+          className="mt-4 transition p-3 bg-lime-500 text-white hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500"
+          onClick={() => console.log("Add to cart:", productData)}
         >
-          Aggiungi al carrello
+          Add to cart
         </button>
       </div>
     </main>

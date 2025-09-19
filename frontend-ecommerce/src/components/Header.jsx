@@ -8,16 +8,18 @@ const Header = () => {
     navigate("/", { state: { resetCategory: true } });
   };
   return (
-    <header className="text-2xl lg:text-4xl shadow-lg p-3 lg:p-6 flex justify-around items-center sticky top-0 bg-white">
+    <header className="text-2xl lg:text-4xl shadow-lg p-3 lg:p-6 flex justify-around items-center sticky top-0 z-10 bg-white dark:bg-neutral-800 dark:text-white">
       <button onClick={handleLogoClick}>
-        <img src={logo} alt="Logo" className="w-35 lg:w-45" />
+        <img
+          src={logo}
+          alt="Logo"
+          className="w-25 lg:w-35 rounded-2xl hover:shadow-md transition hover:shadow-lime-500/50 dark:hover:hover:shadow-lime-700"
+        />
       </button>
       <NavLink
         to="/cart"
         className={({ isActive }) =>
-          isActive
-            ? "text-lime-600 font-semibold"
-            : "text-black hover:text-lime-600"
+          isActive ? "text-lime-600 font-semibold" : " hover:text-lime-600"
         }
       >
         <div className="flex items-center gap-2">
@@ -28,7 +30,7 @@ const Header = () => {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-6"
+            className="size-10"
           >
             <path
               strokeLinecap="round"

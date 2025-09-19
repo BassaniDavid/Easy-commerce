@@ -60,17 +60,19 @@ export default function Homepage() {
   };
 
   return (
-    <main className="min-h-screen p-5">
-      <SearchBar onSearch={handleSearchChange} />
-      <CategoryFilter
-        categories={categories}
-        selected={category}
-        onChange={handleCategoryChange}
-      />
+    <main className="min-h-screen p-5 xl:p-8 xl:px-20 dark:bg-neutral-950 dark:text-white">
+      <div className="flex flex-col gap-3 md:flex-row">
+        <CategoryFilter
+          categories={categories}
+          selected={category}
+          onChange={handleCategoryChange}
+        />
+        <SearchBar onSearch={handleSearchChange} />
+      </div>
 
       {isLoading && <div className="text-gray-500 mb-2">Caricamento...</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
         {productData?.products?.map((product) => (
           <ProductCard
             key={`${product.id}-${product.title}`}
