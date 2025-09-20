@@ -19,7 +19,7 @@ export default function ProductCard({ product }) {
       {/* Link all’interno della card */}
       <Link
         to={`/products/${slugify(product.title)}`}
-        className="flex flex-col w-full"
+        className="flex flex-col w-full mb-5"
       >
         <div className="w-full aspect-square md:mb-3 rounded-lg overflow-hidden">
           <img
@@ -38,7 +38,7 @@ export default function ProductCard({ product }) {
         </div>
       </Link>
 
-      <div className="mt-3 flex items-center justify-between">
+      <div className="mt-auto flex items-center justify-between">
         <button
           onClick={handleAddToCart}
           className="px-3 py-1 rounded transition bg-lime-500 text-white hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500"

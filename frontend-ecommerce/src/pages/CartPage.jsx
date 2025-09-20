@@ -1,5 +1,5 @@
 import { useCart } from "../contexts/CartContext";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const { cart, updateQuantity, removeFromCart } = useCart();
@@ -12,7 +12,7 @@ const CartPage = () => {
       </h1>
 
       {cart.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10 border rounded-2xl border-neutral-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800">
+        <div className="flex flex-col items-center justify-center py-10 lg:mx-[30%] border rounded-2xl border-neutral-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-16 h-16 text-red-400 mb-4"

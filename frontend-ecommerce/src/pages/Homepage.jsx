@@ -11,6 +11,7 @@ import ProductCard from "../components/ProductCard";
 import Pagination from "../components/Pagination";
 import CategoryFilter from "../components/CategoryFilter";
 import SearchBar from "../components/SearchBar";
+import ProductCardLoader from "../components/ProductCardLoader";
 
 export default function Homepage() {
   const location = useLocation();
@@ -70,7 +71,14 @@ export default function Homepage() {
         <SearchBar onSearch={handleSearchChange} />
       </div>
 
-      {isLoading && <div className="text-gray-500 mb-2">Caricamento...</div>}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
+          {" "}
+          {Array.from({ length: 20 }).map((_, index) => (
+            <ProductCardLoader key={index} />
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
         {productData?.products?.map((product) => (
