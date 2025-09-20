@@ -34,7 +34,7 @@ const CartPage = () => {
             Browse our products and add something to get started!
           </p>
           <button
-            className="px-4 py-2 rounded-md transition animate-pulse  bg-lime-400 text-black hover:bg-lime-500 dark:bg-lime-600 dark:text-white dark:hover:bg-lime-400"
+            className="px-4 py-2 rounded-md transition animate-bounce  bg-lime-400 text-black hover:bg-lime-500 dark:bg-lime-600 dark:text-white dark:hover:bg-lime-400"
             onClick={() => navigate("/")}
           >
             Shop Now
