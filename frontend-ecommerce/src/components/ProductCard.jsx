@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
   const decrease = () => setQuantity((q) => Math.max(1, q - 1));
 
   return (
-    <div className="flex flex-col rounded-lg p-4 border h-full hover:shadow-lg hover:scale-101 transition bg-sky-100/50 border-neutral-300 md:shadow-md shadow-sky-600/20 dark:bg-sky-950/10 dark:border-neutral-800 dark:shadow-sky-950/20">
+    <div className="flex flex-col rounded-lg p-4 border h-full hover:shadow-lg hover:scale-101 transition bg-neutral-100/50 border-neutral-300 md:shadow-md shadow-neutral-400 dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-900">
       {/* Link all’interno della card */}
       <Link
         to={`/products/${slugify(product.title)}`}
@@ -31,14 +31,13 @@ export default function ProductCard({ product }) {
 
         <div className="flex-1 flex flex-col">
           <h2 className="text-lg font-semibold">{product.title}</h2>
-          <p className=" line-clamp-3 mt-1 text-gray-600 dark:text-gray-400">
+          <p className=" line-clamp-3 mt-1 text-neutral-700 dark:text-neutral-300">
             {product.description}
           </p>
           <p className="font-bold mt-2">${product.price}</p>
         </div>
       </Link>
 
-      {/* Footer separato con pulsanti + quantità e bottone */}
       <div className="mt-3 flex items-center justify-between">
         <button
           onClick={handleAddToCart}
@@ -50,14 +49,14 @@ export default function ProductCard({ product }) {
         <div className="flex items-center border border-neutral-300 rounded">
           <button
             onClick={decrease}
-            className="px-3 py-1 transition rounded bg-gray-200 hover:bg-gray-400 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-500"
+            className="px-3 py-1 transition rounded bg-sky-200 hover:bg-sky-400 dark:bg-sky-800 dark:text-white dark:hover:bg-sky-500"
           >
             -
           </button>
           <span className="px-4">{quantity}</span>
           <button
             onClick={increase}
-            className="px-3 py-1 transition rounded bg-gray-200 hover:bg-gray-400 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-500"
+            className="px-3 py-1 transition rounded bg-sky-200 hover:bg-sky-400 dark:bg-sky-800 dark:text-white dark:hover:bg-sky-500"
           >
             +
           </button>

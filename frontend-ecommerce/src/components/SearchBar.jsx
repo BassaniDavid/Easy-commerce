@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function SearchBar({
-  onSearch,
-  placeholder = "Cerca prodotti...",
-  resetTrigger,
-}) {
+export default function SearchBar({ onSearch, resetTrigger }) {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
@@ -29,8 +25,8 @@ export default function SearchBar({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className=" p-2 rounded flex-1"
+        placeholder="Search..."
+        className=" p-2 rounded flex-1 focus:outline-none caret-lime-500"
       />
       <button
         onClick={handleSearch}

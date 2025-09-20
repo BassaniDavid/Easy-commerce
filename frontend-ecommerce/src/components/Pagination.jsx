@@ -34,13 +34,20 @@ export default function Pagination({
   const handleNext = () => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  };
+
+  const handlePageClick = (page) => {
+    onPageChange(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Nessuna paginazione se c'è una sola pagina
@@ -60,7 +67,7 @@ export default function Pagination({
       {getPageNumbers().map((page) => (
         <button
           key={page}
-          onClick={() => onPageChange(page)}
+          onClick={() => handlePageClick(page)}
           className={`px-3 py-1 border rounded hover:scale-105 transition hover:bg-lime-500/70 ${
             page === currentPage
               ? "bg-lime-500 text-white dark:bg-lime-600"

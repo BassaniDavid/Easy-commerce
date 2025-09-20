@@ -5,7 +5,7 @@ export default function CategoryFilter({ categories, selected, onChange }) {
       aria-label="Category select"
       value={selected}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded p-1 mb-4  bg-lime-500 text-white hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500"
+      className="rounded p-1 mb-4 focus:outline-none  bg-sky-500 text-white hover:bg-sky-600 dark:bg-sky-700 dark:hover:bg-sky-600 "
     >
       <option value="">category</option>
       {categories.map((cat) => (
