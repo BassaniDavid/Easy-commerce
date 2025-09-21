@@ -2,16 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProductByName } from "../api/api";
 import { useCart } from "../contexts/CartContext";
-
-function deslugify(slug) {
-  return slug.replace(/-/g, " "); // "macbook-pro" → "macbook pro"
-}
+import deslugify from "../utils/deslugify";
 
 function ProductDetailsPage() {
   const { slug } = useParams();
   const [productData, setProductData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1); // quantità selezionata
+  const [quantity, setQuantity] = useState(1);
 
   const { addToCart } = useCart();
 
@@ -41,37 +38,41 @@ function ProductDetailsPage() {
 
   if (loading)
     return (
-      <main className="min-h-[80vh] text-center mt-10 text-gray-500">
-        Caricamento in corso...
+      <main className="min-h-[80vh] text-center pt-10 dark:bg-neutral-950 dark:text-white">
+        <div className="flex-col gap-4 w-full min-h-[80vh] flex items-center justify-center">
+          <div className="w-40 h-40 border-7 border-transparent text-sky-400 text-4xl animate-spin flex items-center justify-center border-t-sky-400 rounded-full">
+            <div className="w-34 h-34 border-6 border-transparent text-lime-400 text-2xl animate-spin flex items-center justify-center border-t-lime-400 rounded-full"></div>
+          </div>
+        </div>
       </main>
     );
 
   if (!productData)
     return (
       <main className="min-h-[80vh] text-center mt-10 text-red-500">
-        Prodotto non trovato
+        Something went wrong, retry later!
       </main>
     );
 
   function renderStars(rating) {
-    const fullStars = Math.ceil(rating); // arrotonda per eccesso
+    const fullStars = Math.ceil(rating);
     const emptyStars = 5 - fullStars;
 
     return (
-      <>
-        {"★".repeat(fullStars)}
-        {"☆".repeat(emptyStars)}
-      </>
+      <div>
+        {"\u2605".repeat(fullStars)}
+        {"\u2606".repeat(emptyStars)}
+      </div>
     );
   }
 
   return (
-    <main className=" min-h-[80vh] p-5 md:px-[10vw] md:py-15 dark:bg-neutral-950 dark:text-white">
+    <main className="min-h-[80vh] p-5 md:px-[10vw] md:py-15 dark:bg-neutral-950 dark:text-white">
       <div className="flex flex-col gap-6 md:flex-row mb-10">
         {/* Immagine prodotto */}
         <div className="flex-shrink-0 md:w-1/4">
           <img
-            src={productData.images}
+            src={productData.images[0] || productData.thumbnail}
             alt={productData.title}
             className="w-full h-auto rounded shadow-md"
           />
@@ -141,11 +142,11 @@ function ProductDetailsPage() {
       {/* recensioni */}
       <div>
         <h2 className="text-xl font-semibold mb-5">reviews</h2>
-        <p className="text-gray-700 dark:text-gray-200">
+        <div className="text-gray-700 dark:text-gray-200">
           <div>
             {productData.reviews.map((review) => (
               <div
-                key={review.id}
+                key={review.reviewerName}
                 className="p-3 lg:p-6 mb-5 border rounded-2xl border-neutral-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800"
               >
                 <div className="flex justify-between mb-4">
@@ -161,7 +162,7 @@ function ProductDetailsPage() {
               </div>
             ))}
           </div>
-        </p>
+        </div>
       </div>
     </main>
   );

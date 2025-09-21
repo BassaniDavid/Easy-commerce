@@ -22,8 +22,10 @@ export default function Homepage() {
 
   // Reset del filtro se navigo dal logo o altra pagina
   useEffect(() => {
-    if (location.state?.resetCategory) {
+    if (location.state?.resetFilter) {
       setCategory("");
+      setSearchTerm("");
+      setCurrentPage(1);
     }
   }, [location.state]);
 
@@ -37,8 +39,8 @@ export default function Homepage() {
         return fetchProductsByCategory(category, productsPerPage, skip);
       return fetchProducts(productsPerPage, skip);
     },
-    keepPreviousData: true, // mantiene i dati della pagina precedente durante il caricamento
-    staleTime: 5 * 60 * 1000, // 5 minuti
+    keepPreviousData: true,
+    staleTime: 10 * 60 * 1000, // 10 minuti
   });
 
   // Query per categorie
@@ -74,20 +76,28 @@ export default function Homepage() {
       {isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
           {" "}
-          {Array.from({ length: 20 }).map((_, index) => (
+          {Array.from({ length: productsPerPage }).map((_, index) => (
             <ProductCardLoader key={index} />
           ))}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
-        {productData?.products?.map((product) => (
-          <ProductCard
-            key={`${product.id}-${product.title}`}
-            product={product}
-          />
-        ))}
-      </div>
+      {/* parte centrale con le card dei prodotti */}
+      {productData && productData.products.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
+          {productData.products.map((product) => (
+            <ProductCard
+              key={`${product.id}-${product.title}`}
+              product={product}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center font-semibold">
+          Ops, unfortunately, it appears that we do not have the product you are
+          looking for
+        </p>
+      )}
 
       {productData && (
         <Pagination

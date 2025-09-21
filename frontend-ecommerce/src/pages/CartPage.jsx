@@ -58,7 +58,6 @@ const CartPage = () => {
                   <p>${product.price.toFixed(2)}</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-2">
                 <input
                   type="number"
@@ -78,6 +77,12 @@ const CartPage = () => {
               </div>
             </div>
           ))}
+          <button
+            className="px-4 py-2 rounded-md transition mx-auto  bg-lime-400 text-black hover:bg-lime-500 dark:bg-lime-600 dark:text-white dark:hover:bg-lime-400"
+            onClick={() => navigate("/")}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       )}
     </main>

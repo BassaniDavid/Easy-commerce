@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { slugify } from "../utils/slugify";
 import { useCart } from "../contexts/CartContext";
 import { useState } from "react";
 
 export default function ProductCard({ product }) {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = () => {
-    addToCart({ id: product.id, quantity }); // invia solo id + quantità
+    addToCart({ id: product.id, quantity });
+    setTimeout(() => {
+      navigate("/cart");
+    }, 500);
   };
 
   const increase = () => setQuantity((q) => q + 1);

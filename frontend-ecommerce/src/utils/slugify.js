@@ -3,7 +3,7 @@ export function slugify(text) {
     .toString()
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-") // spazi → trattini
-    .replace(/[^\w\-]+/g, "") // rimuove caratteri non alfanumerici
-    .replace(/\-\-+/g, "-"); // riduce doppi trattini
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
 }

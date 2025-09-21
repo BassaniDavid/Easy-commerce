@@ -1,5 +1,5 @@
 // Fetch prodotti con paginazione
-export const fetchProducts = async (limit = 20, skip = 0) => {
+export const fetchProducts = async (limit, skip) => {
   try {
     const res = await fetch(
       `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
@@ -14,11 +14,7 @@ export const fetchProducts = async (limit = 20, skip = 0) => {
 };
 
 // Fetch prodotti per categoria con paginazione
-export const fetchProductsByCategory = async (
-  category,
-  limit = 20,
-  skip = 0
-) => {
+export const fetchProductsByCategory = async (category, limit, skip) => {
   try {
     const res = await fetch(
       `https://dummyjson.com/products/category/${encodeURIComponent(

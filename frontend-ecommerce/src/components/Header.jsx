@@ -2,14 +2,33 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import DarkModeToggle from "../components/DarkModeToggle";
 import logo from "../assets/logo.png";
+import { useState, useEffect, useRef } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
   const { cart } = useCart();
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    // Salta l'animazione al primo caricamento del componente
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    // Avvia l'animazione solo se ci sono articoli nel carrello
+    if (cartCount > 0) {
+      setIsAnimating(true);
+      // Rimuovi la classe di animazione dopo che è terminata (300ms)
+      const timer = setTimeout(() => setIsAnimating(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [cartCount]);
 
   const handleLogoClick = () => {
-    navigate("/", { state: { resetCategory: true } });
+    navigate("/", { state: { resetFilter: true } });
   };
   return (
     <header className="text-2xl lg:text-4xl shadow-lg p-2 lg:px-20 flex justify-between items-center sticky top-0 z-10 bg-white dark:bg-neutral-800 dark:text-white">
@@ -45,7 +64,11 @@ const Header = () => {
                 />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/4 text-base font-bold px-2 rounded-full z-0">
+                <span
+                  className={`absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/4 text-base font-bold px-2 rounded-full z-0 ${
+                    isAnimating ? "animate-pop" : ""
+                  }`}
+                >
                   {cartCount}
                 </span>
               )}
