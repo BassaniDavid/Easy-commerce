@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -7,25 +7,19 @@ import { CartProvider } from "../contexts/CartContext";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
-// Mock completo del modulo API
+// Mock delle API usate in Homepage
 vi.mock("../api/api", async () => {
   const actual = await vi.importActual("../api/api");
   return {
     ...actual,
     fetchProductsBySearch: vi.fn(),
     fetchCategories: vi.fn(),
-    fetchProducts: vi.fn(),
-    fetchProductsByCategory: vi.fn(),
   };
-});
-
-beforeAll(() => {
-  window.scrollTo = vi.fn(); // Evita errori legati allo scroll nella HomePage
 });
 
 describe("Homepage - Ricerca prodotti", () => {
   it("filtra i risultati in base al titolo o alla descrizione", async () => {
-    // Mock dinamico della ricerca
+    // Mock dinamico della ricerca prodotti
     api.fetchProductsBySearch.mockImplementation((query) => {
       const allProducts = [
         {
@@ -58,13 +52,15 @@ describe("Homepage - Ricerca prodotti", () => {
       });
     });
 
+    // Mock categorie
+    api.fetchCategories.mockResolvedValue(["mobile-accessories", "laptops"]);
+
+    // Client React Query per i test
     const queryClient = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
 
-    // Mock categorie per evitare errori in Homepage
-    api.fetchCategories.mockResolvedValue(["mobile-accessories", "laptops"]);
-
+    // Render della Homepage con i provider necessari
     render(
       <QueryClientProvider client={queryClient}>
         <MemoryRouter>
@@ -80,18 +76,17 @@ describe("Homepage - Ricerca prodotti", () => {
       name: /search products/i,
     });
 
-    // --- Ricerca tramite titolo ---
+    // --- Ricerca per titolo ---
     await userEvent.type(searchInput, "AirPods");
     await userEvent.click(searchButton);
 
     const productByTitle = await screen.findByText("Apple AirPods Max Silver");
     expect(productByTitle).toBeInTheDocument();
-    // Assicurati che il prodotto non pertinente non compaia
     expect(screen.queryByText("Laptop Pro")).not.toBeInTheDocument();
 
-    // --- Ricerca tramite descrizione ---
+    // --- Ricerca per descrizione ---
     await userEvent.clear(searchInput);
-    await userEvent.type(searchInput, "laptop");
+    await userEvent.type(searchInput, "Powerful laptop");
     await userEvent.click(searchButton);
 
     const productByDesc = await screen.findByText("Laptop Pro");

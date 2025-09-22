@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Homepage from "../pages/Homepage";
 import * as api from "../api/api";
 
-describe("Homepage - Filtraggio per categoria e reset selezionando 'All'", () => {
+describe("Homepage - Filtraggio per categoria e reset selezionando 'category'", () => {
   let queryClient;
 
   beforeEach(() => {
@@ -112,12 +112,12 @@ describe("Homepage - Filtraggio per categoria e reset selezionando 'All'", () =>
     expect(api.fetchProducts).toHaveBeenCalledWith(20, 0);
   });
 
-  it("mostra tutti i prodotti selezionando 'All' dal filtro categorie", async () => {
+  it("mostra tutti i prodotti selezionando 'category' dal filtro categorie", async () => {
     renderHomepage();
 
     const select = screen.getByRole("combobox", { name: /Category select/i });
 
-    // Seleziona 'All' (valore vuoto)
+    // Seleziona 'category' (valore vuoto)
     await userEvent.selectOptions(select, "");
 
     expect(await screen.findByText(/iPhone 14/i)).toBeInTheDocument();
