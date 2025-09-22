@@ -28,6 +28,7 @@ export default function SearchBar({ onSearch, resetTrigger }) {
         placeholder="Search..."
         className=" p-2 rounded flex-1 focus:outline-none caret-lime-500"
       />
+
       <button
         onClick={handleSearch}
         aria-label="search products"

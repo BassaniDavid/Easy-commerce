@@ -6,6 +6,7 @@ export default function DarkModeToggle() {
     return localStorage.getItem("darkMode") === "true";
   });
 
+  // aggiunge o rimuove classe dark per attivare o disattivare la darkmode
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -16,6 +17,7 @@ export default function DarkModeToggle() {
   }, [darkMode]);
 
   return (
+    // toggle darkmode
     <label className="relative inline-flex items-center cursor-pointer">
       <input
         type="checkbox"

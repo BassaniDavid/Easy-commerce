@@ -65,14 +65,18 @@ export default function Homepage() {
   return (
     <main className="min-h-screen p-5 xl:p-8 xl:px-20 dark:bg-neutral-950 dark:text-white">
       <div className="flex flex-col gap-3 md:flex-row">
+        {/* filtro categoria */}
         <CategoryFilter
           categories={categories}
           selected={category}
           onChange={handleCategoryChange}
         />
-        <SearchBar onSearch={handleSearchChange} />
+
+        {/* filtro ricerca */}
+        <SearchBar onSearch={handleSearchChange} resetTrigger={category} />
       </div>
 
+      {/* loader card prodotti */}
       {isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 xl:gap-6">
           {" "}
@@ -99,6 +103,7 @@ export default function Homepage() {
         </p>
       )}
 
+      {/* paginazione */}
       {productData && (
         <Pagination
           totalProducts={productData.total}

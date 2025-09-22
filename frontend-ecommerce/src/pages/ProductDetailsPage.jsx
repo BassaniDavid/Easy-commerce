@@ -19,13 +19,13 @@ function ProductDetailsPage() {
   const increase = () => setQuantity((q) => q + 1);
   const decrease = () => setQuantity((q) => Math.max(1, q - 1));
 
+  // al caricamento, uso lo slug per ottenere i dati del prodotto
   useEffect(() => {
     async function fetchData() {
       try {
         const nameQuery = deslugify(slug);
         const data = await fetchProductByName(nameQuery);
         setProductData(data);
-        console.log(data);
       } catch (error) {
         console.error("Errore nel fetch:", error);
       } finally {
@@ -36,6 +36,7 @@ function ProductDetailsPage() {
     fetchData();
   }, [slug]);
 
+  // loader e risposta per l'utente in caso di errore
   if (loading)
     return (
       <main className="min-h-[80vh] text-center pt-10 dark:bg-neutral-950 dark:text-white">
@@ -54,6 +55,7 @@ function ProductDetailsPage() {
       </main>
     );
 
+  // funzione per calcolare le stelle in base alla valutazione
   function renderStars(rating) {
     const fullStars = Math.ceil(rating);
     const emptyStars = 5 - fullStars;

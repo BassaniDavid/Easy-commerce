@@ -7,6 +7,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const userId = 1;
 
+  // funzione per aggiungere e aggiornare il carrello
   const addToCart = async (product) => {
     const updatedProducts = [...cart];
     const existingIndex = updatedProducts.findIndex((p) => p.id === product.id);
@@ -21,6 +22,7 @@ export const CartProvider = ({ children }) => {
     if (response) setCart(response.products);
   };
 
+  // funzione usata solo nella pagina del carrello per aggiornare la quantità
   const updateQuantity = async (productId, quantity) => {
     const updatedProducts = cart.map((p) =>
       p.id === productId ? { ...p, quantity } : p
@@ -30,11 +32,11 @@ export const CartProvider = ({ children }) => {
     if (response) setCart(response.products);
   };
 
+  // funzione usata solo nella pagina del carrello per rimuovere totalmente un prodotto
   const removeFromCart = async (productId) => {
     const updatedProducts = cart.filter((p) => p.id !== productId);
 
     if (updatedProducts.length === 0) {
-      // Se non ci sono più prodotti, resetta lo stato cart
       setCart([]);
       return;
     }
@@ -52,4 +54,5 @@ export const CartProvider = ({ children }) => {
   );
 };
 
+// hook personalizzato
 export const useCart = () => useContext(CartContext);

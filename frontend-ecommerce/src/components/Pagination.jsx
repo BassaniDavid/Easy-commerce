@@ -55,6 +55,7 @@ export default function Pagination({
 
   return (
     <div className="flex justify-center items-center gap-2 mt-4">
+      {/* freccia indietro */}
       <button
         onClick={handlePrev}
         disabled={currentPage === 1}
@@ -64,6 +65,7 @@ export default function Pagination({
         &#10094;
       </button>
 
+      {/* bottoni con numero pagina */}
       {getPageNumbers().map((page) => (
         <button
           key={page}
@@ -78,6 +80,7 @@ export default function Pagination({
         </button>
       ))}
 
+      {/* freccia avanti */}
       <button
         onClick={handleNext}
         disabled={currentPage === totalPages}

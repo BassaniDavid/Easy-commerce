@@ -32,6 +32,7 @@ const Header = () => {
   };
   return (
     <header className="text-2xl lg:text-4xl shadow-lg p-2 lg:px-20 flex justify-between items-center sticky top-0 z-10 bg-white dark:bg-neutral-800 dark:text-white">
+      {/* logo */}
       <button onClick={handleLogoClick}>
         <img
           src={logo}
@@ -39,6 +40,7 @@ const Header = () => {
           className="w-25 lg:w-35 rounded-2xl hover:shadow-md transition hover:shadow-lime-500/50 dark:hover:hover:shadow-lime-900"
         />
       </button>
+      {/* carrello */}
       <div className="flex gap-5">
         <NavLink
           to="/cart"
@@ -76,6 +78,7 @@ const Header = () => {
           </div>
         </NavLink>
 
+        {/* darkmode toggle */}
         <DarkModeToggle />
       </div>
     </header>

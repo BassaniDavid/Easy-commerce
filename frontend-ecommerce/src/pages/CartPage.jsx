@@ -10,7 +10,7 @@ const CartPage = () => {
       <h1 className="text-2xl font-bold pb-4 xl:pb-10 text-center">
         Your shopping cart
       </h1>
-
+      {/* se il carrello è vuoto */}
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 lg:mx-[30%] border rounded-2xl border-neutral-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800">
           <svg
@@ -41,6 +41,7 @@ const CartPage = () => {
           </button>
         </div>
       ) : (
+        /* se c'è almeno un elemento nel carrello */
         <div className="grid gap-4">
           {cart.map((product) => (
             <div
@@ -77,6 +78,7 @@ const CartPage = () => {
               </div>
             </div>
           ))}
+          {/* tasto fittizio per procedere al pagamento */}
           <button
             className="px-4 py-2 rounded-md transition mx-auto  bg-lime-400 text-black hover:bg-lime-500 dark:bg-lime-600 dark:text-white dark:hover:bg-lime-400"
             onClick={() => navigate("/")}

@@ -43,6 +43,7 @@ export default function ProductCard({ product }) {
       </Link>
 
       <div className="mt-auto flex items-center justify-between">
+        {/*bottone aggiungi al carrello */}
         <button
           onClick={handleAddToCart}
           className="px-3 py-1 rounded transition bg-lime-500 text-white hover:bg-lime-600 dark:bg-lime-600 dark:hover:bg-lime-500"
@@ -50,6 +51,7 @@ export default function ProductCard({ product }) {
           Add to Cart
         </button>
 
+        {/* selettore quantità */}
         <div className="flex items-center border border-neutral-300 rounded">
           <button
             onClick={decrease}
