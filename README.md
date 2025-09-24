@@ -1,109 +1,66 @@
-# Obiettivo  
-Realizza una **pagina vetrina di prodotti** utilizzando l'API di DummyJSON.  
+# easy-commerce
 
-La pagina deve includere:  
-- **Paginazione** per navigare tra i prodotti.  
-- **Filtraggio per categoria**.  
-- **Barra di ricerca** generica (per nome o descrizione).  
+Applicazione **React** che implementa un semplice e-commerce basato sulle API di [DummyJSON](https://dummyjson.com).  
+Il progetto è stato sviluppato seguendo un approccio **TDD (Test-Driven Development)**, con attenzione a performance, chiarezza del codice e user experience.
 
-Inoltre, implementa un sistema di **gestione del carrello** che consenta:  
-- Aggiunta di prodotti al carrello.  
-- Rimozione di prodotti dal carrello.  
-- Modifica delle quantità dei prodotti.  
+## Funzionalità principali
 
-Il progetto deve seguire il principio del **Test-Driven Development (TDD)**.  
+- **Vetrina prodotti**
 
----
+  - Paginazione con un numero limitato di prodotti per pagina
+  - Filtraggio per categoria
+  - Ricerca generica per nome o descrizione
+  - Pagina di dettaglio dedicata per ogni prodotto
 
-## Requisiti  
+- **Carrello**
 
-### 1. API  
-Utilizza le API di [DummyJSON](https://dummyjson.com/) per:  
-- Ottenere i dati dei prodotti.  
-- Gestire il carrello (aggiunta, rimozione, modifica delle quantità).  
+  - Aggiunta di prodotti
+  - Rimozione di prodotti
+  - Aggiornamento delle quantità
+  - Stato sincronizzato con le API di DummyJSON
 
----
+- **UI e UX**
 
-### 2. Funzionalità principali  
+  - Stile realizzato con **Tailwind CSS**
+  - Layout **responsive** ottimizzato per diverse dimensioni di viewport (mobile, tablet, desktop)
+  - Toggle per passaggio tra modalità **chiara** e **scura**
 
-#### **Vetrina prodotti**  
-- **Paginazione**: Mostra un numero limitato di prodotti per pagina.  
-- **Filtraggio per categoria**: Visualizza prodotti filtrati per categoria.  
-- **Ricerca**: Permetti di cercare prodotti per nome o descrizione.  
+- **Ottimizzazione**
+  - Gestione asincrona e caching tramite **@tanstack/react-query**
 
-#### **Carrello**  
-- **Gestione completa**:  
-  - Aggiunta di prodotti al carrello.  
-  - Rimozione di prodotti dal carrello.  
-  - Modifica della quantità dei prodotti presenti nel carrello.  
+## Tecnologie utilizzate
 
----
+- **Framework:** React
+- **Testing:** Vitest + React Testing Library
+- **Stile:** Tailwind CSS
+- **Gestione query e caching:** @tanstack/react-query
 
-### 3. Ottimizzazione  
-- Integra una strategia di **caching** per ridurre le richieste al server e migliorare le prestazioni.  
+## Sviluppo
 
----
+- Architettura modulare e scalabile
+- Implementazione guidata dai test (TDD)
+- test significativi a copertura delle feature principali:
+  - ricerca
+  - paginazione
+  - filtraggio
+  - carrello
+  - pagina prodotto
+  - caching
 
-### 4. Tecnologie  
+## Installazione e avvio
 
-#### **Framework**  
-- Utilizza **React**.  
+- clona repository
+- esegui `npm install`
+- esegui `npm run dev` per avviare l'applicazione e renderla visionabile nel browser
+  -esegui `npm run test` o `npm run test:ui` per eseguire i test
 
-#### **Stile**  
-- Puoi scegliere liberamente tra **CSS puro**, **Tailwind CSS** o altre librerie di stile.  
+## Screenshots
 
-#### **Test**  
-- Scrivi almeno **4-5 test significativi** per le funzionalità principali.  
-
----
-
-### 5. Sviluppo  
-
-- Segui il principio del **Test-Driven Development (TDD)**.  
-- Mantieni il codice **leggibile** e **organizzato**.  
-
----
-
-### 6. Grafica  
-- Sei libero di definire lo stile e il design della pagina.  
-
----
-
-## Criteri di valutazione  
-
-La valutazione si baserà sui seguenti aspetti:  
-
-### **1. Qualità del codice**  
-- Leggibilità, pulizia e manutenibilità.  
-- Uso di buone pratiche di sviluppo.  
-
-### **2. Test**  
-- Completezza e rilevanza dei test rispetto alle funzionalità richieste.  
-
-### **3. Completezza**  
-- Implementazione di tutte le funzionalità previste.  
-
-### **4. Performance**  
-- Ottimizzazione delle chiamate API e interazioni efficienti.  
-
-### **5. Architettura**  
-- Struttura del progetto ben organizzata.  
-
----
-
-## Istruzioni  
-
-1. Effettua un fork di questo repository.  
-2. Sviluppa la tua soluzione seguendo i requisiti.  
-3. Esegui il **commit** e il **push** delle modifiche.  
-
----
-
-## Nota  
-Hai piena libertà creativa per:  
-- La grafica.  
-- Le scelte tecniche.  
-
-Questo progetto è pensato per valutare il tuo approccio allo sviluppo e la tua capacità di affrontare sfide tecniche.  
-
-**Buon lavoro!** 🎉  
+<p align="center">
+<img src="./screenshots/homepage.png" alt="Homepage" width="40%"/>
+<img src="./screenshots/darkmode.png" alt="darkmode" width="40%"/>
+</p>
+<p align="center">
+<img src="./screenshots/details.png" alt="details" width="40%"/>
+<img src="./screenshots/cart.png" alt="cart" width="40%"/>
+</p>
